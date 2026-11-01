@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <title>CBI.ir | نرخ ارز مرجع  | دلار آمريکا   USD</title>
+    <description>Copyright Central Bank of the Islamic Republic of Iran 2026</description>
+    <link>https://www.cbi.ir/ExRatesRSS.aspx?cid=1</link>
+    <language>fa-IR</language>
+    <copyright>(c) 2026 by Central Bank of the Islamic Republic of Iran</copyright>
+    <pubDate>Sat, 31 Oct 2026 20:04:43 GMT</pubDate>
+    <lastBuildDate>Sat, 31 Oct 2026 20:04:43 GMT</lastBuildDate>
+    <generator>CBI.ir rss generator</generator>
+    <image>
+      <title>CBI.ir | نرخ ارز مرجع  | دلار آمريکا   USD</title>
+      <url>http://www.cbi.ir/Images/title_PrintCBI_fa.gif</url>
+      <link>https://www.cbi.ir/ExRatesRSS.aspx?cid=1</link>
+    </image>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/9 :  (  1USD = 1871664 IRR ) </title>
+      <description>1871664</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/31</link>
+      <author>1405/8/9</author>
+      <category>USD</category>
+      <pubDate>Sat, 31 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/8 :  (  1USD = 1867928 IRR ) </title>
+      <description>1867928</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/30</link>
+      <author>1405/8/8</author>
+      <category>USD</category>
+      <pubDate>Fri, 30 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/7 :  (  1USD = 1867928 IRR ) </title>
+      <description>1867928</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/29</link>
+      <author>1405/8/7</author>
+      <category>USD</category>
+      <pubDate>Thu, 29 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/6 :  (  1USD = 1864200 IRR ) </title>
+      <description>1864200</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/28</link>
+      <author>1405/8/6</author>
+      <category>USD</category>
+      <pubDate>Wed, 28 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/5 :  (  1USD = 1860479 IRR ) </title>
+      <description>1860479</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/27</link>
+      <author>1405/8/5</author>
+      <category>USD</category>
+      <pubDate>Tue, 27 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/4 :  (  1USD = 1856765 IRR ) </title>
+      <description>1856765</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/26</link>
+      <author>1405/8/4</author>
+      <category>USD</category>
+      <pubDate>Mon, 26 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>دلار آمريکا   USD   در تاریخ 1405/8/3 :  (  1USD = 1853059 IRR ) </title>
+      <description>1853059</description>
+      <link>/ExRates/rates_fa.aspx?date=2026/10/25</link>
+      <author>1405/8/3</author>
+      <category>USD</category>
+      <pubDate>Sun, 25 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
