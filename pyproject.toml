@@ -1,6 +1,6 @@
 [project]
 name = "cbi-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "Unofficial read-only MCP server for the Central Bank of Iran (cbi.ir): official exchange rates, inflation, policy rates, news."
 readme = "README.md"
 license = "MIT"
