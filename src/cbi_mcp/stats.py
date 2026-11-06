@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import io
 import re
 import xml.etree.ElementTree as ET
@@ -115,29 +116,24 @@ async def cb_statistics(
     section: Annotated[
         Literal["monetary", "balance_of_payments", "fiscal", "capital_market"],
         Field(
-            description="monetary (money, credit, bank balance sheets; many sheets), balance_of_payments (foreign debt, monthly dollar rates in the official, free and preferential markets), fiscal (government budget and tax revenue), capital_market (stock exchange and Islamic securities indicators)."
+            description="monetary (money, credit, bank balance sheets), balance_of_payments (foreign debt, monthly dollar rates), fiscal (budget, taxes), capital_market (stock and sukuk indicators)."
         ),
     ],
-    year: Annotated[
-        int | None, Field(description="Jalali year, e.g. 1404. Default: the newest year listed.", ge=1380, le=1500)
-    ] = None,
+    year: Annotated[int | None, Field(description="Jalali year, e.g. 1404. Default: newest.", ge=1380, le=1500)] = None,
     month: Annotated[
-        int | str | None, Field(description="Month 1-12 or Persian name (مرداد). Default: the newest month listed.")
+        int | str | None, Field(description="Month 1-12 or Persian name (مرداد). Default: newest.")
     ] = None,
     sheet: Annotated[
         str | None,
-        Field(description="Sheet number (1, 2, ...) or part of its name. Default: the first sheet.", max_length=60),
+        Field(description="Sheet number or part of its name. Default: first.", max_length=60),
     ] = None,
-    max_rows: Annotated[int, Field(description="Max rows of the sheet to return (1-200).", ge=1, le=200)] = 60,
+    max_rows: Annotated[int, Field(description="Max rows (1-200).", ge=1, le=200)] = 60,
 ) -> dict[str, Any]:
     """Read one table of the Central Bank's monthly statistics Excel file as rows of numbers and Persian labels.
 
-    Use it for numbers the site only publishes as spreadsheets: money and credit (monetary), foreign debt and
-    monthly average dollar rates (balance_of_payments), budget and taxes (fiscal), stock and sukuk indicators
-    (capital_market). Statistics come months after the period; the newest month differs per section, so check
-    `period`. The result lists every `sheets` name: call again with sheet to read another. Rows keep the file's
-    order, empty cells are dropped, and the title and header rows come first. Money amounts are mostly in
-    trillion rials, i.e. thousand billion (the file says so in its header rows). Related: cb_liquidity for the liquidity summary.
+    Numbers the site publishes only as spreadsheets. Check `period`: the newest month differs per section and lags.
+    `sheets` lists every sheet name; call again with sheet to read another. Rows keep file order, empty cells
+    dropped, title and header rows first. Money is mostly trillion rials. For liquidity use cb_liquidity.
     """
     page, y = await _month_page(SECTIONS[section], year)
     months = [(h, t) for h, t in _links(page, r"/simplelist/\d+\.aspx") if t in MONTHS]
@@ -259,24 +255,20 @@ def parse_auction(text: str) -> dict[str, Any]:
 
 @tool("Government bond auctions")
 async def cb_bond_auctions(
-    limit: Annotated[int, Field(description="How many of the newest auction results to read (1-6).", ge=1, le=6)] = 2,
-    year: Annotated[
-        int | None, Field(description="Jalali year of the news archive. Default: current year.", ge=1399, le=1500)
-    ] = None,
+    limit: Annotated[int, Field(description="Newest results to read (1-6).", ge=1, le=6)] = 2,
+    year: Annotated[int | None, Field(description="Jalali year. Default: current.", ge=1399, le=1500)] = None,
 ) -> dict[str, Any]:
     """Get the results of the Central Bank's weekly government Islamic securities (sukuk) auctions: sold amounts and yields.
 
-    Each result lists per bond symbol (e.g. اراد314) the amount offered, bank orders sent and accepted, the
-    yield to maturity (percent) and what was sold, plus totals for the auction and the year, in trillion
-    rials (هزار میلیارد ریال). Use it for government borrowing and the yield level of public sukuk; for the
-    text of an announcement call cb_news_item with the `id`. Results are announced about a day after the auction.
+    Per bond symbol (e.g. اراد314): amount offered, orders sent and accepted, yield to maturity (percent), amount
+    sold, plus auction and year totals, in trillion rials. Full text: cb_news_item with the `id`.
     """
     items = [
         i
         for i in _news_rows(await _news_page(year))
         if "نتیجه" in i["title"] and "حراج" in _norm(i["title"]) and "اوراق" in i["title"]
     ][:limit]
-    arts = [await cb_news_item(i["id"], 8000) for i in items]
+    arts = await asyncio.gather(*(cb_news_item(i["id"], 8000) for i in items))
     return {
         "auctions": [
             {"id": a["id"], "date": a["date"], "title": a["title"].split(" و تاریخ")[0], **parse_auction(a["text"])}
@@ -327,18 +319,14 @@ def parse_omo(pdf: bytes) -> dict[str, Any]:
 
 @tool("Open market operations")
 async def cb_open_market(
-    limit: Annotated[int, Field(description="How many weekly reports to list (1-12).", ge=1, le=12)] = 4,
-    year: Annotated[
-        int | None, Field(description="Jalali year of the list. Default: current.", ge=1398, le=1500)
-    ] = None,
+    limit: Annotated[int, Field(description="Weekly reports to list (1-12).", ge=1, le=12)] = 4,
+    year: Annotated[int | None, Field(description="Jalali year. Default: current.", ge=1398, le=1500)] = None,
 ) -> dict[str, Any]:
     """List the Central Bank's weekly open market operation reports and read the newest one's repo auction figures.
 
-    Each week the bank lends to banks through repurchase agreements to steer the interbank rate. `latest.repo`
-    gives the banks that took part, the value of orders accepted (trillion rials), the term in days, the
-    lowest accepted rate (percent) and what matured or is still outstanding. Older reports come as PDF links.
-    The figures are read from a PDF whose Persian text is damaged, so only numbers are returned; check them against
-    the file link. Related: cb_policy_rates for the weekly interbank rate and corridor.
+    `latest.repo`: banks taking part, accepted orders (trillion rials), term in days, lowest accepted rate
+    (percent), matured and outstanding. Older reports are PDF links. Read from a damaged-text PDF, so only numbers
+    are returned; check them against the link. See also cb_policy_rates.
     """
     path = "/category/31094.aspx"
     page = await get(path)
