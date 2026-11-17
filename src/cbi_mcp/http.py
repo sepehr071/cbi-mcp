@@ -112,7 +112,7 @@ def _get_client() -> tuple[httpx.AsyncClient, asyncio.Semaphore]:
         _client = httpx.AsyncClient(
             transport=_transport
             or _NavTransport(
-                impersonate="chrome",
+                impersonate="safari",  # Chrome hello hangs about half the time from chi-server (2026-11-16); Safari passes
                 default_headers=True,
                 curl_options={CurlOpt.NOPROXY: "*"},  # httpx-curl-cffi drops its own NOPROXY unless this is non-empty
                 proxy=proxies[_proxy_index % len(proxies)] if proxies else None,
